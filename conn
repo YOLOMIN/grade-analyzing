@@ -1,1 +1,1 @@
-
+下载好该项目之后，在其根目录下创建conn文件，并将目前根目录中的Classes，conn.php，db.php，dbconfig.php放入其中；
