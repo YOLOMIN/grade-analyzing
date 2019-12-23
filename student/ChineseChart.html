@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>个人语文成绩</title>
+
+    <script type="text/javascript" src="../js/echarts.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/datetime.js"></script>
+    <script type="text/javascript" src="../js/laydate/laydate.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+
+    <script>
+
+        laydate.render({
+            elem: '#test1'
+        });
+        laydate.render({
+            elem: '#test2'
+        });
+    </script>
+
+
+
+
+
+</head>
+
+<body>
+
+
+<tr>
+    <td align="center"><a href='SearchScoreChart.html'><input type="submit" name="del" class="btn" value="返回"/></a></td>
+</tr>
+<tr>
+    <td align="center"><a href='MathChart.html'><input type="submit" name="del1" class="btn" value="数学"/></a></td>
+</tr>
+
+<tr>
+    <td align="center"><a href='EnglishChart.html'><input type="submit" name="del2" class="btn" value="英语"/></a></td>
+</tr>
+
+<div style="position:relative;overflow:hidden;width:1538px;height:760px;padding:0px;border-width:0px;cursor:default;"/>
+
+
+
+<div id="bar" style="height:400px;width: 1200px;"></div>
+
+
+
+
+<div id="line-anal" class="anal-text" >
+    决策内容
+</div>
+
+
+
+<script type="text/javascript">
+
+
+
+    //var myChart=echarts.init(document.getElementById('bar'));
+    var myChart = echarts.init(document.getElementById('bar'));
+
+    var Chinese_data=[],ChineseAvg=[],time=[];
+    function arrTest(){
+        //读取json数据
+        $.ajax({
+            type:"post",        //请求服务器载入数据
+            async:false,           //异步属性
+            url:"GainData.php",
+            data:{},
+            dataType:"json",
+
+            success:function(result){
+
+
+                /*  var obj;
+                  if((typeof result=='object')&&result.constructor==Object){
+                      obj=result;
+                  }else{
+                      obj=eval("("+result+")");
+                  }*/
+
+
+
+
+                if(result){
+                    Chinese_data=[];
+                    ChineseAvg=[];
+                    time=[];
+                    for(var i=0;i<result.length;i++){
+                        Chinese_data.push(result[i].Chinese);
+                        ChineseAvg.push(result[i].C_Chinese);
+                        time.push(result[i].time);
+                    }
+                    alert("ajax刷新数据成功");
+                }
+
+            },
+            error:function(response){
+                alert(response.tip);
+                alert("返回数据失败");
+            }
+        });
+
+        return Chinese_data,ChineseAvg,time;
+    }
+    /*function tijiao(){
+        var endtime=document.getElementById('test2').value();
+    }*/
+
+
+    //画图函数
+    function drawp() {
+
+
+    }
+    arrTest();
+    option = {
+        title: {
+            text: '个人成绩统计'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['语文','语文平均分']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data:time//['一月', '二月', '三月', '四月', '五月', '六月', '七月', '九月', '十月', '十一月', '十二月']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '语文',
+                type: 'line',
+                data: Chinese_data
+            },
+
+            {
+                name: '语文平均分',
+                type: 'line',
+                data: ChineseAvg
+            },
+        ]
+    };
+    myChart.setOption(option);
+
+
+</script>
+</body>
+</html>
